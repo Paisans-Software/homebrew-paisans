@@ -1,6 +1,6 @@
 # homebrew-paisans
 
-The Homebrew tap for [paisans-stack](https://github.com/Paisans-Software/paisans-stack),
+The Homebrew tap for [Paisans](https://github.com/Paisans-Software/paisans-cli),
 the toolkit for installing and operating a self-hosted paisans community stack.
 
 ```sh
@@ -18,7 +18,7 @@ The formula is `paisans-cli`; the command it installs is `paisans`.
 
 ## Building from source until the first release
 
-paisans-stack has not published a release, so the formula has no stable
+Paisans has not published a release, so the formula has no stable
 version and `brew install paisans-cli` without `--HEAD` refuses with
 `No stable download is available`. `--HEAD` builds the `develop` branch with Go,
 which Homebrew installs as a build dependency. `brew upgrade --fetch-HEAD
@@ -35,7 +35,7 @@ version "0.1.0"
 
 on_macos do
   on_arm do
-    url "https://github.com/Paisans-Software/paisans-stack/releases/download/v#{version}/<asset>"
+    url "https://github.com/Paisans-Software/paisans-cli/releases/download/v#{version}/<asset>"
     sha256 "..."
   end
   on_intel do
@@ -74,7 +74,7 @@ pull it in:
 
 ```ruby
 head do
-  url "https://github.com/Paisans-Software/paisans-stack.git", branch: "develop"
+  url "https://github.com/Paisans-Software/paisans-cli.git", branch: "develop"
   depends_on "go" => :build
 end
 ```
@@ -94,4 +94,4 @@ brew test paisans-cli
 
 ## License
 
-AGPL-3.0-or-later, the same as paisans-stack. The full text is in `LICENSE`.
+AGPL-3.0-or-later, the same as Paisans. The full text is in `LICENSE`.
