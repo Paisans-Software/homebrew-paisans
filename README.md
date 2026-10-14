@@ -32,7 +32,6 @@ an ordinary install. Add a stable block to `Formula/paisans-cli.rb`, above
 
 ```ruby
   version "0.1.0"
-  license "..."
 
   on_macos do
     on_arm do
@@ -92,3 +91,7 @@ brew audit --strict --tap paisans-software/paisans
 brew install --HEAD paisans-cli
 brew test paisans-cli
 ```
+
+## License
+
+AGPL-3.0-or-later, the same as paisans-stack. The full text is in `LICENSE`.
