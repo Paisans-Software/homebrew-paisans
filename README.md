@@ -5,8 +5,14 @@ the toolkit for installing and operating a self-hosted paisans community stack.
 
 ```sh
 brew tap paisans-software/paisans
+brew trust paisans-software/paisans
 brew install --HEAD paisans-cli
 ```
+
+Homebrew refuses to load a formula from a third-party tap until the tap is
+trusted, which is what `brew trust` does. `brew trust --formula
+paisans-software/paisans/paisans-cli` trusts this one formula instead of the
+whole tap.
 
 The formula is `paisans-cli`; the command it installs is `paisans`.
 
