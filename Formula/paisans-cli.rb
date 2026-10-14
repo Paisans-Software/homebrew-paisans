@@ -1,8 +1,8 @@
 class PaisansCli < Formula
   desc "Install and operate a self-hosted paisans community stack"
-  homepage "https://github.com/Paisans-Software/paisans-stack"
+  homepage "https://github.com/Paisans-Software/paisans-cli"
   license "AGPL-3.0-or-later"
-  head "https://github.com/Paisans-Software/paisans-stack.git", branch: "develop"
+  head "https://github.com/Paisans-Software/paisans-cli.git", branch: "develop"
 
   # The toolkit has not published a release yet, so there is no stable
   # version: `brew install --HEAD paisans-cli` builds from source. When a
