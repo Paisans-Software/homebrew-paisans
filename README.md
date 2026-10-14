@@ -31,52 +31,52 @@ an ordinary install. Add a stable block to `Formula/paisans-cli.rb`, above
 `head`, with one archive per platform the release builds:
 
 ```ruby
-  version "0.1.0"
+version "0.1.0"
 
-  on_macos do
-    on_arm do
-      url "https://github.com/Paisans-Software/paisans-stack/releases/download/v#{version}/<asset>"
-      sha256 "..."
-    end
-    on_intel do
-      url "..."
-      sha256 "..."
-    end
+on_macos do
+  on_arm do
+    url "https://github.com/Paisans-Software/paisans-stack/releases/download/v#{version}/<asset>"
+    sha256 "..."
   end
+  on_intel do
+    url "..."
+    sha256 "..."
+  end
+end
 
-  on_linux do
-    on_arm do
-      url "..."
-      sha256 "..."
-    end
-    on_intel do
-      url "..."
-      sha256 "..."
-    end
+on_linux do
+  on_arm do
+    url "..."
+    sha256 "..."
   end
+  on_intel do
+    url "..."
+    sha256 "..."
+  end
+end
 ```
 
 Then make `install` take the prebuilt binary when there is one and build only
 for `--HEAD`:
 
 ```ruby
-  def install
-    if build.head?
-      system "go", "build", *std_go_args(ldflags: "-s -w", output: bin/"paisans"), "./cmd/paisans"
-    else
-      bin.install "paisans"
-    end
+def install
+  if build.head?
+    system "go", "build", *std_go_args(ldflags: "-s -w", output: bin/"paisans"), "./cmd/paisans"
+  else
+    bin.install "paisans"
   end
+end
 ```
 
 and make Go a build dependency of `--HEAD` alone, so a binary install does not
 pull it in:
 
 ```ruby
-  head do
-    url "https://github.com/Paisans-Software/paisans-stack.git", branch: "develop"
-    depends_on "go" => :build
-  end
+head do
+  url "https://github.com/Paisans-Software/paisans-stack.git", branch: "develop"
+  depends_on "go" => :build
+end
 ```
 
 `<asset>` and the archive layout follow whatever the release workflow
