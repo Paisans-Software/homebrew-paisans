@@ -16,60 +16,60 @@ whole tap.
 
 The formula is `paisans-cli`; the command it installs is `paisans`.
 
-## Building from source until the first release
+## Installing
 
-Paisans has not published a release, so the formula has no stable
-version and `brew install paisans-cli` without `--HEAD` refuses with
-`No stable download is available`. `--HEAD` builds the `develop` branch with Go,
-which Homebrew installs as a build dependency. `brew upgrade --fetch-HEAD
-paisans-cli` rebuilds from the latest commit.
+The formula installs from source only. It has no stable block, so `brew install
+paisans-cli` without `--HEAD` refuses with `No stable download is available`.
+`--HEAD` builds the `develop` branch with Go, which Homebrew installs as a
+build dependency. `brew upgrade --fetch-HEAD paisans-cli` rebuilds from the
+latest commit.
 
-## When the first release ships
+## What releases carry
 
-A release that attaches prebuilt binaries to its GitHub Release turns this into
-an ordinary install. Add a stable block to `Formula/paisans-cli.rb`, above
-`head`, with one archive per platform the release builds:
+Paisans has published releases (v0.1.0 and v0.2.0), tagged from `main`. Releases
+carry no prebuilt macOS binaries. The release workflow attaches static Linux
+binaries, bare executables rather than archives, plus a `SHA256SUMS` file:
+
+* `paisans-linux-amd64`
+* `paisans-linux-arm64`
+* `SHA256SUMS`
+
+They exist for a host owner to run `paisans host admit` on the host itself, and
+they are attached by the workflow from the release after v0.2.0; v0.1.0 and
+v0.2.0 have no assets. Homebrew on Linux could install them, but a stable
+formula for macOS would need macOS binaries first, so the tap stays HEAD-only.
+
+## What a stable block would install
+
+If the formula gains a stable block, it would cover Linux only, one bare binary
+per architecture, and `install` would rename the download:
 
 ```ruby
-version "0.1.0"
-
-on_macos do
-  on_arm do
-    url "https://github.com/Paisans-Software/paisans-cli/releases/download/v#{version}/<asset>"
-    sha256 "..."
-  end
-  on_intel do
-    url "..."
-    sha256 "..."
-  end
-end
+version "X.Y.Z"
 
 on_linux do
   on_arm do
-    url "..."
+    url "https://github.com/Paisans-Software/paisans-cli/releases/download/v#{version}/paisans-linux-arm64"
     sha256 "..."
   end
   on_intel do
-    url "..."
+    url "https://github.com/Paisans-Software/paisans-cli/releases/download/v#{version}/paisans-linux-amd64"
     sha256 "..."
   end
 end
 ```
-
-Then make `install` take the prebuilt binary when there is one and build only
-for `--HEAD`:
 
 ```ruby
 def install
   if build.head?
     system "go", "build", *std_go_args(ldflags: "-s -w", output: bin/"paisans"), "./cmd/paisans"
   else
-    bin.install "paisans"
+    bin.install Dir["paisans-linux-*"].first => "paisans"
   end
 end
 ```
 
-and make Go a build dependency of `--HEAD` alone, so a binary install does not
+Go would be a build dependency of `--HEAD` alone, so a binary install does not
 pull it in:
 
 ```ruby
@@ -79,10 +79,8 @@ head do
 end
 ```
 
-`<asset>` and the archive layout follow whatever the release workflow
-publishes; `bin.install "paisans"` assumes the archive unpacks to a directory
-holding the `paisans` binary. Each later release changes `version` and the
-`sha256` lines, which `shasum -a 256` over each downloaded asset produces.
+Each release changes `version` and the `sha256` lines, which the release's
+`SHA256SUMS` provides.
 
 ## Checking a change
 
