@@ -4,10 +4,9 @@ class PaisansCli < Formula
   license "AGPL-3.0-or-later"
   head "https://github.com/Paisans-Software/paisans-cli.git", branch: "develop"
 
-  # The toolkit has not published a release yet, so there is no stable
-  # version: `brew install --HEAD paisans-cli` builds from source. When a
-  # release ships its binaries, add the stable block here — see README.md,
-  # "When the first release ships".
+  # Releases exist but carry no macOS binaries, so there is no stable block:
+  # `brew install --HEAD paisans-cli` builds from source. README.md,
+  # "What a stable block would install", says what one would look like.
 
   depends_on "go" => :build
 
