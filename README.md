@@ -6,7 +6,7 @@ the toolkit for installing and operating a self-hosted paisans community stack.
 ```sh
 brew tap paisans-software/paisans
 brew trust paisans-software/paisans
-brew install --HEAD paisans-cli
+brew install paisans-cli
 ```
 
 Homebrew refuses to load a formula from a third-party tap until the tap is
@@ -18,75 +18,38 @@ The formula is `paisans-cli`; the command it installs is `paisans`.
 
 ## Installing
 
-The formula installs from source only. It has no stable block, so `brew install
-paisans-cli` without `--HEAD` refuses with `No stable download is available`.
-`--HEAD` builds the `develop` branch with Go, which Homebrew installs as a
-build dependency. `brew upgrade --fetch-HEAD paisans-cli` rebuilds from the
-latest commit.
+`brew install paisans-cli` builds the newest Paisans release from its source
+tarball, pre-releases included: today `v0.3.0-rc.1`. Go is a build dependency,
+which Homebrew installs. A tarball carries no git metadata, so the formula
+passes the release tag as the build's commit
+(`-X github.com/paisans-software/paisans-cli/internal/version.buildCommit=v<version>`),
+and every record Paisans writes names the release that wrote it. `paisans
+version` prints `paisans <version> (v<version>)`.
 
-## What releases carry
+`brew install --HEAD paisans-cli` builds the `develop` branch instead, which
+names its commit from git. `brew upgrade --fetch-HEAD paisans-cli` rebuilds it
+from the latest commit.
 
-Paisans has published releases (v0.1.0 and v0.2.0), tagged from `main`. Releases
-carry no prebuilt macOS binaries. The release workflow attaches static Linux
-binaries, bare executables rather than archives, plus a `SHA256SUMS` file:
+## Releasing a new version here
 
-* `paisans-linux-amd64`
-* `paisans-linux-arm64`
-* `SHA256SUMS`
+Each Paisans release, pre-releases included, changes three lines of the
+formula: the tag in `url`, `version`, and `sha256`, the checksum of the source
+tarball:
 
-They exist for a host owner to run `paisans host admit` on the host itself, and
-they are attached by the workflow from the release after v0.2.0; v0.1.0 and
-v0.2.0 have no assets. Homebrew on Linux could install them, but a stable
-formula for macOS would need macOS binaries first, so the tap stays HEAD-only.
-
-## What a stable block would install
-
-If the formula gains a stable block, it would cover Linux only, one bare binary
-per architecture, and `install` would rename the download:
-
-```ruby
-version "X.Y.Z"
-
-on_linux do
-  on_arm do
-    url "https://github.com/Paisans-Software/paisans-cli/releases/download/v#{version}/paisans-linux-arm64"
-    sha256 "..."
-  end
-  on_intel do
-    url "https://github.com/Paisans-Software/paisans-cli/releases/download/v#{version}/paisans-linux-amd64"
-    sha256 "..."
-  end
-end
+```sh
+curl -sL https://github.com/Paisans-Software/paisans-cli/archive/refs/tags/v<version>.tar.gz | shasum -a 256
 ```
 
-```ruby
-def install
-  if build.head?
-    system "go", "build", *std_go_args(ldflags: "-s -w", output: bin/"paisans"), "./cmd/paisans"
-  else
-    bin.install Dir["paisans-linux-*"].first => "paisans"
-  end
-end
-```
-
-Go would be a build dependency of `--HEAD` alone, so a binary install does not
-pull it in:
-
-```ruby
-head do
-  url "https://github.com/Paisans-Software/paisans-cli.git", branch: "develop"
-  depends_on "go" => :build
-end
-```
-
-Each release changes `version` and the `sha256` lines, which the release's
-`SHA256SUMS` provides.
+Releases also attach static Linux binaries (`paisans-linux-amd64`,
+`paisans-linux-arm64` and `SHA256SUMS`), for a host owner who runs
+`sudo paisans site admit --request` on the host itself. The formula builds
+from source on every platform and does not use them.
 
 ## Checking a change
 
 ```sh
 brew audit --strict --tap paisans-software/paisans
-brew install --HEAD paisans-cli
+brew install --build-from-source paisans-cli
 brew test paisans-cli
 ```
 
