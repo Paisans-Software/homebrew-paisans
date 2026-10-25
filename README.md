@@ -19,12 +19,12 @@ The formula is `paisans-cli`; the command it installs is `paisans`.
 ## Installing
 
 `brew install paisans-cli` builds the newest Paisans release from its source
-tarball, pre-releases included: today `v0.3.0-rc.9`. Go is a build dependency,
+tarball, pre-releases included: today `v0.3.0-rc.10`. Go is a build dependency,
 which Homebrew installs. A tarball carries no git metadata, so the formula
 passes the release tag as the build's commit
 (`-X github.com/paisans-software/paisans-cli/internal/version.buildCommit=v<version>`),
 and every record Paisans writes names the release that wrote it. `paisans
-version` prints `paisans <version> (v<version>)`.
+version` prints `paisans <version>`.
 
 `brew install --HEAD paisans-cli` builds the `develop` branch instead, which
 names its commit from git. `brew upgrade --fetch-HEAD paisans-cli` rebuilds it
