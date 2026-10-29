@@ -1,9 +1,9 @@
 class PaisansCli < Formula
   desc "Install and operate a self-hosted paisans community stack"
   homepage "https://github.com/Paisans-Software/paisans-cli"
-  url "https://github.com/Paisans-Software/paisans-cli/archive/refs/tags/v0.3.0-rc.16.tar.gz"
-  version "0.3.0-rc.16"
-  sha256 "26a0ebb5638d57b1de5bc6279e15e3561101665fbf51a33ad43a49f7bdf5f4b4"
+  url "https://github.com/Paisans-Software/paisans-cli/archive/refs/tags/v0.3.0-rc.17.tar.gz"
+  version "0.3.0-rc.17"
+  sha256 "0501e5a1d8a85c463a3c504bcae03c681bf8835d7b43ea60632ff63f4ccfa3dd"
   license "AGPL-3.0-or-later"
   head "https://github.com/Paisans-Software/paisans-cli.git", branch: "develop"
 
